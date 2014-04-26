@@ -6,7 +6,7 @@
 DPLAModel = Backbone.Model.extend({
 	
 	initialize: function(options)  {
-		
+		this.getDplaData(new SearchTerm("cats"));
 	},
 	runSearch: function(evt)  {
 		var obj_data = {};
@@ -55,7 +55,7 @@ DPLAModel = Backbone.Model.extend({
         	Session.set('datasets', data_obj);
         	//Session.set('datasets', Utils.parseObject(res));
         } else  {
-        	console.log(err)
+        	console.log(err);
         }
 	}
 });

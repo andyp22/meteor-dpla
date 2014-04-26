@@ -22,9 +22,7 @@ ViewHome = Backbone.View.extend({
 			}
 		};
 		
-		model.getDplaData(new SearchTerm("cats"));
-	    
-	    Template.home.datasets = function(e)  {
+		Template.home.datasets = function(e)  {
 			return Session.get('datasets');
 		};
 		
