@@ -26,7 +26,7 @@ RouteFactory = Backbone.Model.extend({
 	 * @instance
 	 */
 	home: function()  {
-        App.router.routePath(ViewHome);
+        App.router.routePath(ViewHome, { model: new DPLAModel() });
 	},
 	/**
 	 * Render the user account page view.
