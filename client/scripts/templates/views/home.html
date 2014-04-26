@@ -1,0 +1,46 @@
+<template name="home">
+	<div id="page_home" class="page">
+		{{> search_form}}
+        <div id="output">
+        	{{#each datasets}}
+        		{{> item}}
+        	{{/each}}
+        </div>
+        <!--div id="output">{{{datasets}}}</div-->
+	</div>
+</template>
+
+<template name="item">
+	<div>
+		<strong>Title:</strong> {{title}}<br/>
+		<strong>Creator:</strong> {{author}}<br/>
+		{{#if description}}
+			<strong>Descrition:</strong> {{description}}<br/>
+		{{/if}}
+		{{#if object}}
+			{{{object}}}<br/>
+		{{/if}}
+		<strong>Provided By:</strong> {{dataProvider}}<br/>
+		<strong>Date Published/Printed:</strong> {{date}}<br/>
+		<strong>Type:</strong> {{type}}
+	</div>
+</template>
+
+<template name="search_form">
+	<form id="search-form" parsley-validate>
+		<input id="search_term" class="type_text" type="search" name="search_term" placeholder="Search Terms" required />
+		<input id="search_term_and" class="type_radio" type="radio" name="search_term_join" value="and" checked />
+		<label for="search_term_and">AND</label>
+		<input id="search_term_or" class="type_radio" type="radio" name="search_term_join" value="or" />
+		<label for="search_term_or">OR</label>
+		<label for="search_item_type">Display:</label>
+		<select id="search_item_type" name="search_item_type">
+			<option value="all" selected>All types</option>
+			<option value="text">Documents</option>
+			<option value="image">Images</option>
+			<option value="sound">Sounds</option>
+			<option value="video">Videos</option>
+		</select>
+		<input class="button" type="submit" name="submit" value="Search" />
+	</form>
+</template>

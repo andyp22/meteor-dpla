@@ -1,2 +1,17 @@
+# Ignore configuration files that may contain sensitive information.
+server/Google.js
+
+# Ignore build output
+/.build
 .meteor/local
-.meteor/meteorite
+packages/npm/.npm
+
+# Ignore various other cruft
+.DS_Store
+.buildpath
+.project
+.settings
+/backup
+/tmp
+.gitignore~
+README.md~
