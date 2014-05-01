@@ -4,9 +4,8 @@
  * @class SearchTerm
  */
 SearchTerm = function(search_term, join, options)  {
-	this.search_term = this.getSafeSearchTerm(search_term);
-	this.search_term_join = join || 'and';
-	this.search_item_type = 'all';
+	this.search_term_any = this.getSafeSearchTerm(search_term);
+	this.search_term_join_any = join || 'and';
 	
 	for(var elm in options)  {
 		this[elm] = options[elm];

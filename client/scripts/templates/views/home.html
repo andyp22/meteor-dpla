@@ -1,6 +1,7 @@
 <template name="home">
 	<div id="page_home" class="page">
 		{{> search_form}}
+		{{> advanced_search_form}}
         <div id="output">
         	{{#each datasets}}
         		{{> item}}
@@ -28,19 +29,47 @@
 
 <template name="search_form">
 	<form id="search-form" parsley-validate>
-		<input id="search_term" class="type_text" type="search" name="search_term" placeholder="Search Terms" required />
-		<input id="search_term_and" class="type_radio" type="radio" name="search_term_join" value="and" checked />
-		<label for="search_term_and">AND</label>
-		<input id="search_term_or" class="type_radio" type="radio" name="search_term_join" value="or" />
-		<label for="search_term_or">OR</label>
-		<label for="search_item_type">Display:</label>
-		<select id="search_item_type" name="search_item_type">
-			<option value="all" selected>All types</option>
-			<option value="text">Documents</option>
-			<option value="image">Images</option>
-			<option value="sound">Sounds</option>
-			<option value="video">Videos</option>
-		</select>
+		<input id="search_term_any" class="type_text" type="search" name="search_term_any" placeholder="Search Terms" required />
+		<input id="search_term_and_any" class="type_radio" type="radio" name="search_term_join_any" value="and" checked />
+		<label for="search_term_and_any">AND</label>
+		<input id="search_term_or_any" class="type_radio" type="radio" name="search_term_join_any" value="or" />
+		<label for="search_term_or_any">OR</label>
+		<input class="button" type="submit" name="submit" value="Search" />
+	</form>
+</template>
+
+<template name="advanced_search_form_search_field">
+		<label for="search_term_{{id}}">{{title}}</label>
+		<input id="search_term_{{id}}" class="type_text" type="search" name="search_term_{{id}}" placeholder="Search Terms" />
+		<input id="search_term_and_{{id}}" class="type_radio" type="radio" name="search_term_join_{{id}}" value="and" checked />
+		<label for="search_term_and_{{id}}">AND</label>
+		<input id="search_term_or_{{id}}" class="type_radio" type="radio" name="search_term_join_{{id}}" value="or" />
+		<label for="search_term_or_{{id}}">OR</label>
+		<input id="search_term_wildcard_{{id}}" class="type_checkbox" type="checkbox" name="search_term_wildcard_{{id}}" />
+		<label for="search_term_wildcard_{{id}}">Wildcard</label>
+</template>
+
+<template name="advanced_search_form">
+	<form id="advanced-search-form" parsley-validate>
+		{{#each advanced_search_fields}}
+			{{> advanced_search_form_search_field}}<br/>
+		{{/each}}
+		<fieldset class="asf-types-checkboxes">
+			<legend>Document Types</legend>
+			<input id="asf-types-images" class="type_checkbox" type="checkbox" name="asf-types-images" checked />
+			<label for="asf-types-images">Images</label>
+			<input id="asf-types-text" class="type_checkbox" type="checkbox" name="asf-types-text" checked />
+			<label for="asf-types-text">Text</label>
+			<input id="asf-types-sounds" class="type_checkbox" type="checkbox" name="asf-types-sounds" checked />
+			<label for="asf-types-sounds">Sounds</label>
+			<input id="asf-types-videos" class="type_checkbox" type="checkbox" name="asf-types-videos" checked />
+			<label for="asf-types-videos">Videos</label>
+		</fieldset>
+		<label for="search_term_after_date">After</label>
+		<input id="search_term_after_date" class="type_text" type="date" name="search_term_after_date" placeholder="Date" />
+		<label for="search_term_before_date">Before</label>
+		<input id="search_term_before_date" class="type_text" type="date" name="search_term_before_date" placeholder="Date" />
+		<br/>
 		<input class="button" type="submit" name="submit" value="Search" />
 	</form>
 </template>

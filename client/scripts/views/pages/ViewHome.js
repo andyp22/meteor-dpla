@@ -18,7 +18,15 @@ ViewHome = Backbone.View.extend({
 			// Prevent the page reloading for links.
 			"submit": function(e) {
            		e.preventDefault();
-           		model.runSearch(e);
+           		model.runSearch(e, '#search-form');
+			}
+		};
+		
+		Template.advanced_search_form.events = {
+			// Prevent the page reloading for links.
+			"submit": function(e) {
+           		e.preventDefault();
+           		model.runSearch(e, '#advanced-search-form');
 			}
 		};
 		
@@ -27,7 +35,30 @@ ViewHome = Backbone.View.extend({
 		};
 		
 		this.template = function () {
-			var data = new Object();
+			var data = {
+				advanced_search_fields: [
+					{
+						title: 'Any',
+						id: 'any'
+					},
+					{
+						title: 'Title',
+						id: 'title'
+					},
+					{
+						title: 'Author',
+						id: 'author'
+					},
+					{
+						title: 'Description',
+						id: 'description'
+					},
+					{
+						title: 'Location',
+						id: 'location'
+					}
+				]
+			};
 			return UI.renderWithData(Template.home, data);
 		};
 	},

@@ -8,16 +8,16 @@ DPLAModel = Backbone.Model.extend({
 	initialize: function(options)  {
 		this.getDplaData(new SearchTerm("cats"));
 	},
-	runSearch: function(evt)  {
+	runSearch: function(evt, formId)  {
 		var obj_data = {};
-		$.each($('#search-form').serializeArray(), function() {
+		$.each($(formId).serializeArray(), function() {
 		    if(this.name != 'submit' && this.name != 'cancel')  {
 		    	obj_data[this.name] = this.value;
 		    }
 		});
-		//console.log(JSON.stringify(form_data, null, 1));
-		var search_term = obj_data.search_term;
-		delete obj_data.search_term;
+		console.log(JSON.stringify(obj_data, null, 1));
+		var search_term = obj_data.search_term_any;
+		delete obj_data.search_term_any;
 		
 		this.getDplaData(new SearchTerm(search_term, null, obj_data));
 	},
