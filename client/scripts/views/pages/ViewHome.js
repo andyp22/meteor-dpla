@@ -6,6 +6,7 @@ ViewHome = Backbone.View.extend({
 	template: null,
 	
 	initialize: function()  {
+		var self = this;
 		var model = this.model;
 		Template.home.events = {
 			// Prevent the page reloading for links.
@@ -31,7 +32,20 @@ ViewHome = Backbone.View.extend({
 		};
 		
 		Template.home.datasets = function(e)  {
-			return Session.get('datasets');
+			var data = Session.get('datasets');
+			$('#results-output').imagesLoaded( function() {
+				self.initLayout();
+			});
+			return data;
+		};
+		
+		Template.home.rendered = function()  {
+			$(window).scroll(function () {
+				self.top = $(window).scrollTop() + $(window).height() - $(window).height();
+				if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+			        model.loadMoreContent();
+			    }
+			});
 		};
 		
 		this.template = function () {
@@ -65,5 +79,15 @@ ViewHome = Backbone.View.extend({
 	render: function()  {
 		this.$el.html(UI.insert(this.template(), this.el));
 		return this;
+	},
+	initLayout: function()  {
+		// initialize Masonry after all images have loaded  
+		$('#results-output').imagesLoaded( function() {
+			var container = document.querySelector('#results-output');
+		    var msnry = new Masonry(container,{
+				itemSelector: '.box',
+				transitionDuration: '0.5s'
+		    });
+		});
 	}
 });

@@ -5,7 +5,10 @@
  */
 DPLAModel = Backbone.Model.extend({
 	
+	fetching_data: false,
+	
 	initialize: function(options)  {
+		this.fetching_data = false;
 		this.getDplaData(new SearchTerm("cats"));
 	},
 	runSearch: function(evt, formId)  {
@@ -21,41 +24,66 @@ DPLAModel = Backbone.Model.extend({
 		
 		this.getDplaData(new SearchTerm(search_term, null, obj_data));
 	},
+	loadMoreContent: function()  {
+		if(!this.fetching_data)  {
+			this.fetching_data = true;
+			var self = this;
+			Meteor.call( 'load_more_dpla_data', function( err, res ) { self.onUpdateDataReturned(err, res); });
+		}
+	},
 	getDplaData: function(search_data)  {
-		var self = this;
-		Meteor.call( 'get_dpla_data', search_data, function( err, res ) { self.onDataReturned(err, res); });
+		if(!this.fetching_data)  {
+			this.fetching_data = true;
+			var self = this;
+			Meteor.call( 'get_dpla_data', search_data, function( err, res ) { self.onDataReturned(err, res); });
+		}
 	},
 	onDataReturned: function(err, res)  {
+		this.fetching_data = false;
 		//console.log("data: " + JSON.stringify(res, 2, null));
         if(!err)  {
         	var data_obj = new Array();
-        	for(var i = 0; i < res.docs.length; i++)  {
-        		var doc = res.docs[i];
-        		//console.log("author: " + doc.sourceResource.creator);
-        		var obj = {
-	        		title: doc.sourceResource.title,
-	        		author: doc.sourceResource.creator || "None listed",
-	        		description: doc.sourceResource.description,
-	        		isShownAt: doc.isShownAt,
-	        		dataProvider: doc.dataProvider,
-	        		type: doc.sourceResource.type,
-	        		date: (doc.sourceResource.date && doc.sourceResource.date.displayDate) ? doc.sourceResource.date.displayDate: 'None listed'
-	        	};
-	        	switch(obj.type)  {
-	        		case "image":
-	        			obj.object = '<a href="' + doc.isShownAt + '" target="_blank"><img src="' + doc.object + '" /></a>';
-	        			break;
-	        		default:
-	        			obj.object = '<a href="' + doc.isShownAt + '" target="_blank">Source</a>';
-	        		
-	        	}
-	        	data_obj.push(obj);
-        	}
+        	this.parseSearchData(data_obj, res);
         	
         	Session.set('datasets', data_obj);
         	//Session.set('datasets', Utils.parseObject(res));
         } else  {
         	console.log(err);
         }
+	},
+	onUpdateDataReturned: function(err, res)  {
+		this.fetching_data = false;
+        if(!err)  {
+        	var data_obj = Session.get('datasets') || new Array();
+        	if(res.docs != undefined)  {
+        		this.parseSearchData(data_obj, res);
+        	}
+        	Session.set('datasets', data_obj);
+        } else  {
+        	console.log(err);
+        }
+	},
+	parseSearchData: function(data_array, results)  {
+		for(var i = 0; i < results.docs.length; i++)  {
+    		var doc = results.docs[i];
+    		var obj = {
+        		title: doc["sourceResource.title"],
+        		author: doc["sourceResource.creator"] || "None listed",
+        		description: doc["sourceResource.description"],
+        		isShownAt: doc["isShownAt"],
+        		dataProvider: doc["dataProvider"],
+        		type: doc["sourceResource.type"],
+        		date: (doc["sourceResource.date"] && doc["sourceResource.date"].displayDate) ? doc["sourceResource.date"].displayDate: 'None listed'
+        	};
+        	switch(obj.type)  {
+        		case "image":
+        			obj.object = '<a href="' + doc["isShownAt"] + '" target="_blank"><img src="' + doc["object"] + '" /></a>';
+        			break;
+        		default:
+        			obj.object = '<a href="' + doc["isShownAt"] + '" target="_blank">Source</a>';
+        		
+        	}
+        	data_array.push(obj);
+    	}
 	}
 });

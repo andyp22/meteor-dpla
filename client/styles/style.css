@@ -73,3 +73,32 @@ code {
     line-height: 240%;
 }
 
+
+
+img  {
+	width: 100%;
+}
+.box  {
+	width: 25%;
+	background-color:#596595;
+	margin: 10px;
+	height: auto;
+}
+.box h3  {
+	margin: 0;
+	padding: 6px 8px 4px 10px;
+	font-size: 130%;
+	color: #333;
+	border-bottom: 1 px solid #e0cfab;
+	background-color: #d0d0d0;
+}
+.box ul  {
+	margin: 0;
+	padding: 14px 10px;
+	list-style: none;
+}
+.box ul li  {
+	margin: 0 0 6px;
+	padding: 0;
+}
+

@@ -2,42 +2,72 @@ QueryGenerator = function(baseUrl, version, api_key)  {
 	this.baseUrl = baseUrl;
 	this.version = version;
 	this.api_key = api_key;
+	this.current_query = '';
+	this.page_num = 1;
+	this.count = 10;
+	this.enabled = true;
 };
 
 QueryGenerator.prototype.getBaseQueryUrl = function()  {
 	return this.baseUrl + '/' + this.version + '/';
 };
 
+QueryGenerator.prototype.buildQuery = function()  {
+	var query = this.getBaseQueryUrl() + 'items?' + this.current_query + '&page_size=' + this.count + '&page=' + this.page_num + '&api_key=' + this.api_key;
+	this.page_num += 1;
+	return query;
+};
+
+QueryGenerator.prototype.disableUpdates = function()  {
+	this.enabled = false;
+};
+
+QueryGenerator.prototype.queriesEnabled = function()  {
+	return this.enabled;
+};
+
+QueryGenerator.prototype.getCount = function()  {
+	return this.count;
+};
+
 QueryGenerator.prototype.getQuery = function(search_data)  {
-	var count = 10;
 	var query = '';
 	
-	if(search_data.search_term_any)  {
-		var q = 'q=' + this.getTermQuery(search_data.search_term_any, search_data.search_term_join_any);
-		query = this.updateQuery(q, query);
-	}
-	if(search_data.search_term_title)  {
-		var q = 'sourceResource.title=' + this.getTermQuery(search_data.search_term_title, search_data.search_term_join_title);
-		query = this.updateQuery(q, query);
-	}
-	if(search_data.search_term_author)  {
-		var q = 'sourceResource.creator=' + this.getTermQuery(search_data.search_term_author, search_data.search_term_join_author);
-		query = this.updateQuery(q, query);
-	}
-	if(search_data.search_term_description)  {
-		var q = 'sourceResource.description=' + this.getTermQuery(search_data.search_term_description, search_data.search_term_join_description);
-		query = this.updateQuery(q, query);
-	}
-	if(search_data.search_term_location)  {
-		var q = 'sourceResource.spatial=' + this.getTermQuery(search_data.search_term_location, search_data.search_term_join_location);
-		query = this.updateQuery(q, query);
+	for(var elm in search_data)  {
+		switch(elm)  {
+			case 'search_term_any':
+				var q = 'q=' + this.getTermQuery(search_data.search_term_any, search_data.search_term_join_any);
+				query = this.updateQuery(q, query);
+				break;
+			case 'search_term_title':
+				var q = 'sourceResource.title=' + this.getTermQuery(search_data.search_term_title, search_data.search_term_join_title);
+				query = this.updateQuery(q, query);
+				break;
+			case 'search_term_author':
+				var q = 'sourceResource.creator=' + this.getTermQuery(search_data.search_term_author, search_data.search_term_join_author);
+				query = this.updateQuery(q, query);
+				break;
+			case 'search_term_description':
+				var q = 'sourceResource.description=' + this.getTermQuery(search_data.search_term_description, search_data.search_term_join_description);
+				query = this.updateQuery(q, query);
+				break;
+			case 'search_term_location':
+				var q = 'sourceResource.spatial=' + this.getTermQuery(search_data.search_term_location, search_data.search_term_join_location);
+				query = this.updateQuery(q, query);
+				break;
+		}
 	}
 	
 	query = this.updateQuery(this.getDocTypesQuery(search_data), query);
 	query = this.updateQuery(this.getTemporalQuery(search_data), query);
+	query = this.updateQuery(this.getFieldLimits(), query);
 	
-    console.log("Query: "+query);
-    return this.getBaseQueryUrl() + 'items?' + query + '&page_size=' + count + '&api_key=' + this.api_key;
+    //console.log("Query: "+query);
+    this.current_query = query;
+    this.page_num = 1;
+    this.enabled = true;
+    
+    return this.buildQuery();
 };
 
 QueryGenerator.prototype.updateQuery = function(term, query)  {
@@ -52,6 +82,27 @@ QueryGenerator.prototype.updateQuery = function(term, query)  {
 
 QueryGenerator.prototype.getTermQuery = function(search_term, search_type)  {
 	return (search_type === 'or') ? search_term.split(' ').join('+OR+'): search_term.split(' ').join('+AND+');
+};
+
+QueryGenerator.prototype.getFieldLimits = function()  {
+	var desired_fields = [
+		"sourceResource.title",
+		"sourceResource.creator",
+		"sourceResource.description",
+		"isShownAt",
+		"dataProvider",
+		"sourceResource.type",
+		"sourceResource.date",
+		"object"
+	];
+	var fields = 'fields=';
+	for(var i = 0; i < desired_fields.length; i++)  {
+		fields += desired_fields[i];
+		if(i < (desired_fields.length-1))  {
+			fields += ',';
+		}
+	}
+	return fields;
 };
 
 QueryGenerator.prototype.getDocTypesQuery = function(search_data)  {

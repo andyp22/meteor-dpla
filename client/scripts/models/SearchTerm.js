@@ -12,6 +12,6 @@ SearchTerm = function(search_term, join, options)  {
 	}
 };
 SearchTerm.prototype.getSafeSearchTerm = function(search_term)  {
-	var punctuationless = search_term.replace(/[\.,-\/#!$%\^&\*;:{}=\-_`~()@\+\?><\[\]\+]/g, '');
+	var punctuationless = search_term.replace(/[\.,-\/#!$%\^&;:{}=\-_`~()@\+\?><\[\]\+]/g, '');
 	return punctuationless.replace(/\s{2,}/g," ");	
 };

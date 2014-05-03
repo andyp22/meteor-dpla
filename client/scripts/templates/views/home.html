@@ -2,38 +2,37 @@
 	<div id="page_home" class="page">
 		{{> search_form}}
 		{{> advanced_search_form}}
-        <div id="output">
-        	{{#each datasets}}
-        		{{> item}}
-        	{{/each}}
+		<div id="results-container">
+	        <div id="results-output">
+	        	{{#each datasets}}
+	        		{{> item}}
+	        	{{/each}}
+	        </div>
         </div>
-        <!--div id="output">{{{datasets}}}</div-->
 	</div>
 </template>
 
 <template name="item">
-	<div>
-		<strong>Title:</strong> {{title}}<br/>
-		<strong>Creator:</strong> {{author}}<br/>
-		{{#if description}}
-			<strong>Descrition:</strong> {{description}}<br/>
-		{{/if}}
+	<div class="box">
 		{{#if object}}
 			{{{object}}}<br/>
 		{{/if}}
-		<strong>Provided By:</strong> {{dataProvider}}<br/>
-		<strong>Date Published/Printed:</strong> {{date}}<br/>
-		<strong>Type:</strong> {{type}}
+		<h3>{{title}}</h3>
+		<ul>
+			{{#if description}}
+				<li><strong>Descrition:</strong> {{{description}}}</li>
+			{{/if}}
+			<li><strong>Creator:</strong> {{author}}</li>
+			<li><strong>Provided By:</strong> {{dataProvider}}</li>
+			<li><strong>Date Published/Printed:</strong> {{date}}</li>
+			<li><strong>Type:</strong> {{type}}</li>
+		</ul>
 	</div>
 </template>
 
 <template name="search_form">
 	<form id="search-form" parsley-validate>
 		<input id="search_term_any" class="type_text" type="search" name="search_term_any" placeholder="Search Terms" required />
-		<input id="search_term_and_any" class="type_radio" type="radio" name="search_term_join_any" value="and" checked />
-		<label for="search_term_and_any">AND</label>
-		<input id="search_term_or_any" class="type_radio" type="radio" name="search_term_join_any" value="or" />
-		<label for="search_term_or_any">OR</label>
 		<input class="button" type="submit" name="submit" value="Search" />
 	</form>
 </template>
@@ -45,8 +44,6 @@
 		<label for="search_term_and_{{id}}">AND</label>
 		<input id="search_term_or_{{id}}" class="type_radio" type="radio" name="search_term_join_{{id}}" value="or" />
 		<label for="search_term_or_{{id}}">OR</label>
-		<input id="search_term_wildcard_{{id}}" class="type_checkbox" type="checkbox" name="search_term_wildcard_{{id}}" />
-		<label for="search_term_wildcard_{{id}}">Wildcard</label>
 </template>
 
 <template name="advanced_search_form">
@@ -72,4 +69,15 @@
 		<br/>
 		<input class="button" type="submit" name="submit" value="Search" />
 	</form>
+</template>
+
+<template name="result_item">
+	<div class="box">
+		<h3>Gifts and Special Offers</h3>
+		<ul>
+			<li>Some text</li>
+			<li>Some text</li>
+			<li>Some text</li>
+		</ul>
+	</div>
 </template>
