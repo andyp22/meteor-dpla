@@ -4,7 +4,7 @@ QueryGenerator = function(baseUrl, version, api_key)  {
 	this.api_key = api_key;
 	this.current_query = '';
 	this.page_num = 1;
-	this.count = 10;
+	this.count = 50;
 	this.enabled = true;
 };
 

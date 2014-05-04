@@ -14,12 +14,15 @@ ViewHome = Backbone.View.extend({
 				App.router.clickReplace(e);
 			}
 		};
-		
 		Template.search_form.events = {
 			// Prevent the page reloading for links.
 			"submit": function(e) {
            		e.preventDefault();
            		model.runSearch(e, '#search-form');
+			},
+			"click .advanced-search-toggle": function(e)  {
+				e.preventDefault();
+				
 			}
 		};
 		
@@ -28,6 +31,21 @@ ViewHome = Backbone.View.extend({
 			"submit": function(e) {
            		e.preventDefault();
            		model.runSearch(e, '#advanced-search-form');
+           		$("#advanced-search-form-container").slideToggle("fast");
+			},
+			"click .reset_btn": function(e) {
+           		e.preventDefault();
+           		console.log("reset");
+           		model.resetSearch();
+			},
+			"click .cancel_btn": function(e) {
+           		e.preventDefault();
+           		model.resetSearch();
+           		$("#advanced-search-form-container").slideToggle("fast");
+			},
+			"click .close_btn": function(e) {
+           		e.preventDefault();
+           		$("#advanced-search-form-container").slideToggle("fast");
 			}
 		};
 		
@@ -41,18 +59,26 @@ ViewHome = Backbone.View.extend({
 		
 		Template.home.rendered = function()  {
 			$(window).scroll(function () {
-				self.top = $(window).scrollTop() + $(window).height() - $(window).height();
-				if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+				var mult = ($(document).height() > 20000) ? (($(document).height() > 40000) ? .95: .875) : .8;
+				var more_height = $(document).height()*mult - $(window).height();
+				if ($(window).scrollTop() >= more_height) {
 			        model.loadMoreContent();
 			    }
 			});
+		};
+		
+		Template.search_form.rendered = function()  {
+			$(".advanced-search-toggle").click(function() {
+                $("#advanced-search-form-container").slideToggle("fast");
+            });
+            $("#advanced-search-form-container").hide();
 		};
 		
 		this.template = function () {
 			var data = {
 				advanced_search_fields: [
 					{
-						title: 'Any',
+						title: 'All Fields',
 						id: 'any'
 					},
 					{

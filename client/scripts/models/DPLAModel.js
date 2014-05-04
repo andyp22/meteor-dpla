@@ -18,11 +18,14 @@ DPLAModel = Backbone.Model.extend({
 		    	obj_data[this.name] = this.value;
 		    }
 		});
-		console.log(JSON.stringify(obj_data, null, 1));
+		//console.log(JSON.stringify(obj_data, null, 1));
 		var search_term = obj_data.search_term_any;
 		delete obj_data.search_term_any;
 		
 		this.getDplaData(new SearchTerm(search_term, null, obj_data));
+	},
+	resetSearch: function()  {
+		$('#advanced-search-form')[0].reset();
 	},
 	loadMoreContent: function()  {
 		if(!this.fetching_data)  {
@@ -77,11 +80,19 @@ DPLAModel = Backbone.Model.extend({
         	};
         	switch(obj.type)  {
         		case "image":
-        			obj.object = '<a href="' + doc["isShownAt"] + '" target="_blank"><img src="' + doc["object"] + '" /></a>';
+        			obj.object = '<a href="' + doc["isShownAt"] + '" target="_blank"><img data-pin-color="red" data-pin-height="28" data-pin-hover="true" src="' + doc["object"] + '" /></a>';
+        			break;
+        		case "text":
+        			obj.object = '<a href="' + doc["isShownAt"] + '" target="_blank"><img src="./images/document_icon.png" /></a>';
+        			break;
+        		case "moving image":
+        			obj.object = '<a href="' + doc["isShownAt"] + '" target="_blank"><img src="./images/video_icon.jpg" /></a>';
+        			break;
+        		case "sound":
+        			obj.object = '<a href="' + doc["isShownAt"] + '" target="_blank"><img src="./images/sound_icon.jpg" /></a>';
         			break;
         		default:
         			obj.object = '<a href="' + doc["isShownAt"] + '" target="_blank">Source</a>';
-        		
         	}
         	data_array.push(obj);
     	}

@@ -1,7 +1,15 @@
 <template name="home">
 	<div id="page_home" class="page">
-		{{> search_form}}
-		{{> advanced_search_form}}
+		<div id="search-container">
+			<div id="advanced-search-form-container" class="rounded">
+				<div id="advanced-search-form-container-inner" class="rounded">
+					{{> advanced_search_form}}
+				</div>
+			</div>
+			<div id="search-form-container">
+				{{> search_form}}
+			</div>
+		</div>
 		<div id="results-container">
 	        <div id="results-output">
 	        	{{#each datasets}}
@@ -13,61 +21,80 @@
 </template>
 
 <template name="item">
-	<div class="box">
-		{{#if object}}
-			{{{object}}}<br/>
-		{{/if}}
-		<h3>{{title}}</h3>
-		<ul>
-			{{#if description}}
-				<li><strong>Descrition:</strong> {{{description}}}</li>
+	<div class="box rounded">
+		<div class="box-content">
+			{{#if object}}
+				{{{object}}}<br/>
 			{{/if}}
-			<li><strong>Creator:</strong> {{author}}</li>
-			<li><strong>Provided By:</strong> {{dataProvider}}</li>
-			<li><strong>Date Published/Printed:</strong> {{date}}</li>
-			<li><strong>Type:</strong> {{type}}</li>
-		</ul>
+			<h3>{{title}}</h3>
+			<ul>
+				{{#if description}}
+					<!--li class="wrapword"><strong>Description:</strong> {{{description}}}</li-->
+				{{/if}}
+				<li><strong>Creator:</strong> {{author}}</li>
+				<li><strong>Provided By:</strong> {{dataProvider}}</li>
+				<li><strong>Date Released:</strong> {{date}}</li>
+			</ul>
+		</div>
 	</div>
 </template>
 
 <template name="search_form">
 	<form id="search-form" parsley-validate>
-		<input id="search_term_any" class="type_text" type="search" name="search_term_any" placeholder="Search Terms" required />
-		<input class="button" type="submit" name="submit" value="Search" />
+		<div class="searchField"><input id="search_term_any" class="type_text rounded" type="search" name="search_term_any" placeholder="Search Terms" required /></div>
+		<div class="searchBtn"><INPUT type="submit" name="" value="" title="Search"></div>
+		<a class="advanced-search-toggle" href='#'>+Advanced</a>
 	</form>
 </template>
 
 <template name="advanced_search_form_search_field">
-		<label for="search_term_{{id}}">{{title}}</label>
-		<input id="search_term_{{id}}" class="type_text" type="search" name="search_term_{{id}}" placeholder="Search Terms" />
-		<input id="search_term_and_{{id}}" class="type_radio" type="radio" name="search_term_join_{{id}}" value="and" checked />
-		<label for="search_term_and_{{id}}">AND</label>
-		<input id="search_term_or_{{id}}" class="type_radio" type="radio" name="search_term_join_{{id}}" value="or" />
-		<label for="search_term_or_{{id}}">OR</label>
+		<td class="left-col"><label for="search_term_{{id}}">{{title}}</label></td>
+		<td class="center-col"><input id="search_term_{{id}}" class="type_text rounded" type="search" name="search_term_{{id}}" placeholder="Search Terms" size="28" /></td>
+		<td class="right-col"><input id="search_term_or_{{id}}" class="type_checkbox" type="checkbox" name="search_term_join_{{id}}" value="or" />
+		<label for="search_term_or_{{id}}">OR</label></td>
 </template>
 
 <template name="advanced_search_form">
+	<div id="asf_header"><a class="close_btn" href='#'>X</a></div>
 	<form id="advanced-search-form" parsley-validate>
-		{{#each advanced_search_fields}}
-			{{> advanced_search_form_search_field}}<br/>
-		{{/each}}
-		<fieldset class="asf-types-checkboxes">
-			<legend>Document Types</legend>
-			<input id="asf-types-images" class="type_checkbox" type="checkbox" name="asf-types-images" checked />
-			<label for="asf-types-images">Images</label>
-			<input id="asf-types-text" class="type_checkbox" type="checkbox" name="asf-types-text" checked />
-			<label for="asf-types-text">Text</label>
-			<input id="asf-types-sounds" class="type_checkbox" type="checkbox" name="asf-types-sounds" checked />
-			<label for="asf-types-sounds">Sounds</label>
-			<input id="asf-types-videos" class="type_checkbox" type="checkbox" name="asf-types-videos" checked />
-			<label for="asf-types-videos">Videos</label>
-		</fieldset>
-		<label for="search_term_after_date">After</label>
-		<input id="search_term_after_date" class="type_text" type="date" name="search_term_after_date" placeholder="Date" />
-		<label for="search_term_before_date">Before</label>
-		<input id="search_term_before_date" class="type_text" type="date" name="search_term_before_date" placeholder="Date" />
-		<br/>
-		<input class="button" type="submit" name="submit" value="Search" />
+		<table>
+			{{#each advanced_search_fields}}
+				<tr>{{> advanced_search_form_search_field}}</tr>
+			{{/each}}
+			<tr>
+				<td class="full-col" colspan="3">
+					<fieldset class="asf-dates">
+						<legend>Dates</legend>
+						<label for="search_term_after_date">After</label>
+						<input id="search_term_after_date" class="type_text rounded" type="date" name="search_term_after_date" placeholder="Date" size="5" maxlength="4" />
+						<label for="search_term_before_date">Before</label>
+						<input id="search_term_before_date" class="type_text rounded" type="date" name="search_term_before_date" placeholder="Date" size="5" maxlength="4" />
+					</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td class="full-col" colspan="3">
+					<fieldset class="asf-types-checkboxes">
+						<legend>Document Types</legend>
+						<input id="asf-types-images" class="type_checkbox" type="checkbox" name="asf-types-images" checked />
+						<label for="asf-types-images">Images</label>
+						<input id="asf-types-text" class="type_checkbox" type="checkbox" name="asf-types-text" checked />
+						<label for="asf-types-text">Text</label>
+						<input id="asf-types-sounds" class="type_checkbox" type="checkbox" name="asf-types-sounds" checked />
+						<label for="asf-types-sounds">Sounds</label>
+						<input id="asf-types-videos" class="type_checkbox" type="checkbox" name="asf-types-videos" checked />
+						<label for="asf-types-videos">Videos</label>
+					</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td class="full-col" colspan="3">
+					<input class="button" type="submit" name="submit" value="Search" />
+					<input class="reset_btn button" type="button" name="resetbtn" value="Reset" />
+					<input class="cancel_btn button" type="button" name="cancel" value="Cancel" />
+				</td>
+			</tr>
+		</table>
 	</form>
 </template>
 
