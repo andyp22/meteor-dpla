@@ -80,7 +80,7 @@ DPLAModel = Backbone.Model.extend({
         	};
         	switch(obj.type)  {
         		case "image":
-        			obj.object = '<a href="' + doc["isShownAt"] + '" target="_blank"><img data-pin-color="red" data-pin-height="28" data-pin-hover="true" src="' + doc["object"] + '" /></a>';
+        			obj.object = '<a href="' + doc["isShownAt"] + '" target="_blank"><img src="' + doc["object"] + '" /></a>';
         			break;
         		case "text":
         			obj.object = '<a href="' + doc["isShownAt"] + '" target="_blank"><img src="./images/document_icon.png" /></a>';
@@ -92,7 +92,7 @@ DPLAModel = Backbone.Model.extend({
         			obj.object = '<a href="' + doc["isShownAt"] + '" target="_blank"><img src="./images/sound_icon.jpg" /></a>';
         			break;
         		default:
-        			obj.object = '<a href="' + doc["isShownAt"] + '" target="_blank">Source</a>';
+        			obj.object = '<a href="' + doc["isShownAt"] + '" target="_blank"><img src="./images/object_icon.png" /></a>';
         	}
         	data_array.push(obj);
     	}
